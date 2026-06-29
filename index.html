@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📒 Bloc-notes Français — vers le C1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wood:#bb8a5e; --wood-dark:#9c6b43; --wood-deep:#7a5436;
+    --bg:#faf5ee; --clay:#d98e73; --clay-soft:#f6ddd0; --clay-deep:#bd6a4d;
+    --cream:#fffdf9; --paper:#ffffff; --ink:#4a3f35; --muted:#a6927d; --line:#e7d8c4;
+    --shadow:0 6px 0 rgba(187,138,94,.18), 0 10px 22px rgba(122,84,54,.10);
+    --sidebar:#f4ebde;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{font-family:"Zen Maru Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--ink);font-size:15px;line-height:1.6;background:var(--bg);
+    background-image:radial-gradient(rgba(255,255,255,.8) 2px, transparent 2px),
+                     radial-gradient(rgba(187,138,94,.14) 2px, transparent 2px);
+    background-size:26px 26px, 26px 26px; background-position:0 0, 13px 13px;}
+  h1,h2,.brand,.badge,.grp,.tab,.subtab{font-family:"Mochiy Pop One","Zen Maru Gothic",sans-serif;font-weight:400}
+  .topbar{min-height:64px;background:linear-gradient(180deg,#d3ad84,var(--wood));color:#fff;
+    display:flex;align-items:center;gap:14px;padding:8px 20px;
+    border-bottom-left-radius:26px;border-bottom-right-radius:26px;
+    box-shadow:0 6px 0 rgba(156,107,67,.25);position:relative;z-index:5}
+  .mascot{width:46px;height:46px;flex:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.12))}
+  .brand h1{font-size:16.5px;margin:0;letter-spacing:.3px;text-shadow:0 2px 0 rgba(122,84,54,.35)}
+  .brand .sub{font-size:11.5px;opacity:.95;margin-top:2px}
+  .spacer{flex:1}
+  .app{display:flex;height:calc(100% - 64px)}
+  .rail{width:60px;display:flex;flex-direction:column;align-items:center;padding-top:18px;gap:10px}
+  .tab{writing-mode:vertical-rl;transform:rotate(180deg);color:var(--wood-deep);background:#fff;
+    padding:16px 11px;border-radius:18px;font-size:12.5px;letter-spacing:1.3px;cursor:pointer;
+    box-shadow:0 4px 0 rgba(187,138,94,.28);border:2px solid #e3d2bb;transition:transform .1s}
+  .tab:hover{transform:translateY(-1px)}
+  .tab.active{background:var(--clay-soft);color:var(--clay-deep);border-color:#eec5b4;box-shadow:0 4px 0 rgba(189,106,77,.22)}
+  .pages{width:308px;background:var(--sidebar);overflow-y:auto;flex-shrink:0;padding-bottom:30px;border-right:2px dashed #e0cdb2}
+  .pages .search{position:sticky;top:0;background:var(--sidebar);padding:14px 14px 8px;z-index:2}
+  .pages .search input{width:100%;border:2px solid #e3d2bb;border-radius:18px;padding:9px 14px;font-size:13px;background:#fff;outline:none;font-family:inherit}
+  .pages .search input:focus{border-color:var(--clay);box-shadow:0 0 0 3px var(--clay-soft)}
+  .cnt-lbl{font-size:11.5px;color:var(--muted);padding:8px 4px 0;font-weight:700}
+  .grp{font-size:11.5px;letter-spacing:.5px;color:var(--wood-deep);padding:16px 16px 6px}
+  .pitem{margin:0 10px 8px;padding:11px 13px;cursor:pointer;background:#fff;border:2px solid #f0e6d7;
+    border-radius:16px;transition:transform .12s, box-shadow .12s, border-color .12s}
+  .pitem:hover{transform:translateY(-2px);box-shadow:0 5px 0 rgba(187,138,94,.20);border-color:#e3d2bb}
+  .pitem.active{border-color:var(--clay);box-shadow:0 5px 0 rgba(189,106,77,.20);background:#fffaf6}
+  .pitem .t{font-size:13.5px;font-weight:700;line-height:1.4}
+  .pitem .m{font-size:11px;color:var(--muted);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap}
+  .pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+  .pill.ex{background:#eef3df;color:#7a8a3f}
+  .pill.co{background:var(--clay-soft);color:var(--clay-deep)}
+  .pill.no{background:#f0e6d7;color:#b6a48c}
+  .content{flex:1;overflow-y:auto}
+  .sheet{max-width:900px;margin:30px auto;background:var(--paper);border:3px solid #ecdcc6;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+  .sheet:before{content:"❀";position:absolute;top:14px;right:20px;color:var(--clay);font-size:22px;opacity:.8}
+  .sheet-head{padding:24px 32px 8px;background:linear-gradient(180deg,#fffefb,var(--cream))}
+  .badge{display:inline-block;font-size:11px;color:#fff;background:var(--wood);border-radius:20px;padding:5px 14px;margin-bottom:10px;box-shadow:0 3px 0 rgba(122,84,54,.22)}
+  .sheet-head h2{margin:0 0 14px;font-size:20px;color:var(--wood-deep);line-height:1.4}
+  .subtabs{display:flex;gap:10px;padding:0 32px;border-bottom:3px dotted #f0d9c9;margin-bottom:6px}
+  .subtab{font-size:13px;padding:9px 18px 10px;border-radius:16px 16px 0 0;cursor:pointer;background:#f4ebde;color:var(--wood-deep);border:2px solid #e7d8c4;border-bottom:none;position:relative;top:2px}
+  .subtab.active{background:#fff;color:var(--clay-deep);border-color:#f0d9c9}
+  .subtab.disabled{opacity:.45;cursor:not-allowed}
+  .subtab.co.active{color:var(--clay-deep)}
+  .sheet-body{padding:14px 32px 30px}
+  .sheet-body h3{font-size:12.5px;letter-spacing:.4px;color:var(--clay-deep);margin:18px 0 10px;font-family:"Mochiy Pop One",sans-serif}
+  .scan{margin:14px 0;text-align:center}
+  .scan img{max-width:100%;border:3px solid #fff;border-radius:18px;cursor:zoom-in;box-shadow:0 4px 0 rgba(187,138,94,.22), 0 8px 18px rgba(122,84,54,.12)}
+  .transc p{margin:0 0 13px}
+  .nocorr,.hint{color:var(--muted);font-size:12.5px}
+  .hint{text-align:center;margin-top:-2px}
+  .none{color:var(--muted);text-align:center;padding:48px 10px;font-size:14px}
+  .none .big{font-size:40px;display:block;margin-bottom:10px}
+  .empty{color:var(--muted);text-align:center;margin-top:90px;font-size:15px}
+  .empty .big{font-size:46px;display:block;margin-bottom:12px}
+  .lb{position:fixed;inset:0;background:rgba(122,84,54,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:24px}
+  .lb.open{display:flex}
+  .lb img{max-width:96%;max-height:94%;border-radius:16px;border:5px solid #fff;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+  .lb .x{position:absolute;top:16px;right:24px;color:#fff;font-size:34px;cursor:pointer;line-height:1}
+  .pages::-webkit-scrollbar,.content::-webkit-scrollbar{width:11px}
+  .pages::-webkit-scrollbar-thumb,.content::-webkit-scrollbar-thumb{background:#dcc3a3;border-radius:10px;border:3px solid transparent;background-clip:content-box}
+  @media(max-width:720px){.pages{width:220px}.rail{width:44px}.sheet-body,.sheet-head,.subtabs{padding-left:18px;padding-right:18px}}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <svg class="mascot" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="50" cy="92" rx="26" ry="5" fill="rgba(0,0,0,.10)"/>
+      <path d="M50 14c20 0 32 15 32 36 0 22-14 36-32 36S18 72 18 50C18 29 30 14 50 14z" fill="#fff"/>
+      <path d="M50 18c17 0 28 13 28 32 0 19-12 32-28 32S22 69 22 50C22 31 33 18 50 18z" fill="#fbf3e8"/>
+      <circle cx="38" cy="50" r="4.6" fill="#4a3f35"/><circle cx="62" cy="50" r="4.6" fill="#4a3f35"/>
+      <circle cx="36.4" cy="48.4" r="1.5" fill="#fff"/><circle cx="60.4" cy="48.4" r="1.5" fill="#fff"/>
+      <circle cx="30" cy="58" r="5" fill="#e6b59a" opacity=".7"/><circle cx="70" cy="58" r="5" fill="#e6b59a" opacity=".7"/>
+      <path d="M45 58q5 5 10 0" fill="none" stroke="#4a3f35" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M50 14c4-6 12-7 14-2-3 0-6 2-8 6" fill="#bb8a5e"/>
+    </svg>
+    <div class="brand"><h1>Bloc-notes Français&nbsp;— vers le C1</h1><div class="sub">Exercices corrigés, productions &amp; fiches de révision · objectif DALF&nbsp;C1 ✨</div></div>
+    <div class="spacer"></div>
+  </div>
+
+  <div class="app">
+    <div class="rail">
+      <div class="tab active" data-sec="ex">EXERCICES</div>
+      <div class="tab" data-sec="notes">NOTES</div>
+    </div>
+    <nav class="pages">
+      <div class="search">
+        <input id="search" type="search" placeholder="🔍 Rechercher…">
+        <div class="cnt-lbl" id="cnt"></div>
+      </div>
+      <div id="pageList"></div>
+    </nav>
+    <main class="content"><div id="sheet"><div class="empty"><span class="big">🍵</span>Choisis une page à gauche~</div></div></main>
+  </div>
+
+  <div class="lb" id="lb"><span class="x" id="lbx">&times;</span><img id="lbimg" src="" alt=""></div>
+
+<script src="data.js"></script>
+<script src="notes.js"></script>
+<script>
+(function(){
+  var T = window.TOPICS || [];
+  var N = window.NOTES || [];
+  var listEl=document.getElementById('pageList'), sheetEl=document.getElementById('sheet'), cntEl=document.getElementById('cnt');
+  var section='ex', curId=null, curView='exercice';
+  function data(){ return section==='ex'?T:N; }
+
+  function renderList(filter){
+    filter=(filter||"").toLowerCase().trim();
+    listEl.innerHTML="";
+    var d=data();
+    var shown=d.filter(function(t){ return !filter || (t.title+" "+(t.type||t.tag||"")).toLowerCase().indexOf(filter)>=0; });
+    cntEl.textContent=(section==='ex'?"🪵 "+shown.length+" dossiers":"🍃 "+shown.length+" fiches");
+    var order=[], seen={};
+    shown.forEach(function(t){ if(!seen[t.group]){seen[t.group]=1;order.push(t.group);} });
+    order.forEach(function(g){
+      var h=document.createElement('div'); h.className='grp'; h.textContent=g; listEl.appendChild(h);
+      shown.filter(function(t){return t.group===g;}).forEach(function(t){
+        var el=document.createElement('div'); el.className='pitem'; el.dataset.id=t.id;
+        var meta;
+        if(section==='ex'){
+          var ex=t.exercice?'<span class="pill ex">📝 exercice</span>':'';
+          var co=t.correction?'<span class="pill co">✅ correction</span>':'<span class="pill no">pas de correction</span>';
+          meta=ex+co;
+        }else{ meta='<span class="pill ex">'+esc(t.tag||"Note")+'</span>'; }
+        el.innerHTML='<div class="t">'+esc(t.title)+'</div><div class="m">'+meta+'</div>';
+        el.onclick=function(){ select(t.id); };
+        listEl.appendChild(el);
+      });
+    });
+  }
+
+  function select(id, view){
+    var t=data().filter(function(x){return x.id===id;})[0]; if(!t) return;
+    curId=id;
+    [].forEach.call(document.querySelectorAll('.pitem'),function(e){e.classList.toggle('active',e.dataset.id===id);});
+    if(section==='notes'){
+      sheetEl.innerHTML='<article class="sheet"><div class="sheet-head"><span class="badge">'+esc(t.tag||"Note")+'</span><h2>'+esc(t.title)+'</h2></div>'+
+        '<div class="sheet-body"><div class="transc">'+(t.html||'')+'</div></div></article>';
+      sheetEl.parentElement.scrollTop=0; return;
+    }
+    curView = view || (t.exercice?'exercice':'correction');
+    var hasEx=!!t.exercice, hasCo=!!t.correction;
+    var st='<div class="subtabs">'+tabBtn('exercice','📝 Exercice',hasEx)+tabBtn('correction','✅ Correction',hasCo)+'</div>';
+    var body;
+    if(curView==='exercice' && hasEx){
+      var imgs=t.exercice.imgs||[];
+      body=(imgs.length?'<h3>🖼️ Scan original</h3>'+imgs.map(scan).join('')+'<p class="hint">Clique sur l’image pour l’agrandir ✨</p>':'')+
+           (t.exercice.html?'<h3>📝 Transcription</h3><div class="transc">'+t.exercice.html+'</div>':'');
+    }else if(curView==='correction' && hasCo){
+      var ci=t.correction.imgs||[];
+      body='<h3>📄 Correction du professeur</h3>'+ci.map(scan).join('')+'<p class="hint">Clique sur l’image pour l’agrandir ✨</p>';
+    }else{
+      body='<div class="none"><span class="big">🍃</span>'+(curView==='correction'?'Pas de correction associée pour le moment.':'Pas d’exercice associé.')+'</div>';
+    }
+    sheetEl.innerHTML='<article class="sheet"><div class="sheet-head"><span class="badge">'+esc(t.type)+'</span><h2>'+esc(t.title)+'</h2></div>'+
+      st+'<div class="sheet-body">'+body+'</div></article>';
+    [].forEach.call(sheetEl.querySelectorAll('.subtab'),function(b){
+      if(b.classList.contains('disabled'))return;
+      b.onclick=function(){ select(curId,b.dataset.v); };
+    });
+    sheetEl.parentElement.scrollTop=0; bindImgs();
+  }
+  function tabBtn(v,label,enabled){
+    var cls='subtab'+(v==='correction'?' co':'')+(curView===v&&enabled?' active':'')+(enabled?'':' disabled');
+    return '<div class="'+cls+'" data-v="'+v+'">'+label+'</div>';
+  }
+  function scan(s){return '<div class="scan"><img src="'+s+'" loading="lazy" alt="page"></div>';}
+
+  var lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg');
+  function bindImgs(){[].forEach.call(sheetEl.querySelectorAll('.scan img'),function(im){im.onclick=function(){lbimg.src=im.src;lb.classList.add('open');};});}
+  document.getElementById('lbx').onclick=function(){lb.classList.remove('open');};
+  lb.onclick=function(e){if(e.target===lb)lb.classList.remove('open');};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('open');});
+  document.getElementById('search').addEventListener('input',function(e){renderList(e.target.value);});
+
+  [].forEach.call(document.querySelectorAll('.tab'),function(tb){
+    tb.onclick=function(){
+      section=tb.dataset.sec;
+      [].forEach.call(document.querySelectorAll('.tab'),function(x){x.classList.toggle('active',x===tb);});
+      document.getElementById('search').value='';
+      renderList('');
+      var d=data(); if(d.length) select(d[0].id);
+    };
+  });
+
+  function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  renderList('');
+  if(T.length) select(T[0].id);
+})();
+</script>
+</body>
+</html>
