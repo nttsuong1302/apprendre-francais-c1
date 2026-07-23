@@ -105,6 +105,7 @@
     <div class="rail">
       <div class="tab active" data-sec="ex">EXERCICES</div>
       <div class="tab" data-sec="notes">NOTES</div>
+      <div class="tab" data-sec="prepa">PRÉPA</div>
     </div>
     <nav class="pages">
       <div class="search">
@@ -120,13 +121,15 @@
 
 <script src="data.js"></script>
 <script src="notes.js"></script>
+<script src="prepa.js"></script>
 <script>
 (function(){
   var T = window.TOPICS || [];
   var N = window.NOTES || [];
+  var P = window.PREPA || [];
   var listEl=document.getElementById('pageList'), sheetEl=document.getElementById('sheet'), cntEl=document.getElementById('cnt');
   var section='ex', curId=null, curView='exercice';
-  function data(){ return section==='ex'?T:N; }
+  function data(){ return section==='ex'?T:(section==='notes'?N:P); }
 
   function renderList(filter){
     filter=(filter||"").toLowerCase().trim();
@@ -157,7 +160,7 @@
     var t=data().filter(function(x){return x.id===id;})[0]; if(!t) return;
     curId=id;
     [].forEach.call(document.querySelectorAll('.pitem'),function(e){e.classList.toggle('active',e.dataset.id===id);});
-    if(section==='notes'){
+    if(section!=='ex'){
       sheetEl.innerHTML='<article class="sheet"><div class="sheet-head"><span class="badge">'+esc(t.tag||"Note")+'</span><h2>'+esc(t.title)+'</h2></div>'+
         '<div class="sheet-body"><div class="transc">'+(t.html||'')+'</div></div></article>';
       sheetEl.parentElement.scrollTop=0; return;
